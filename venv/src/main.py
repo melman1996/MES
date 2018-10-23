@@ -16,20 +16,18 @@ if __name__ == "__main__":
     K = json["K"]
     t = json["t"]
 
-    nodes = list()
-    for i in range(0, nL):
-        for j in range(0, nH):
-            nodes.append(Node(i, j, t))
+    universal = UniversalElement()
 
-    elements = list()
-    for i in range(0, nL - 1):
-        for j in range(0, nH - 1):
-            tmp = [nodes[i * nH + j], nodes[i * nH + j + 1], nodes[(i + 1) * nH + j], nodes[(i + 1) * nH + j + 1]]
-            elements.append(Element(tmp))
 
-    # elements[0].print()
-    # elements[4].print()
-    # elements[10].print()
-    # elements[14].print()
-
-    grid = Grid(nodes=nodes, elements=elements)
+    # nodes = list()
+    # for i in range(0, nL):
+    #     for j in range(0, nH):
+    #         nodes.append(Node(i, j, t))
+    #
+    # elements = list()
+    # for i in range(0, nL - 1):
+    #     for j in range(0, nH - 1):
+    #         tmp = [nodes[i * nH + j], nodes[(i + 1) * nH + j], nodes[(i + 1) * nH + j + 1], nodes[i * nH + j + 1]]
+    #         elements.append(Element(tmp))
+    #
+    # grid = Grid(nodes=nodes, elements=elements)
