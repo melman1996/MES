@@ -1,13 +1,9 @@
-from structures import *
+from structures.grid import *
+from structures.universal_element import *
+from utils import *
 
-import json
 
-def read_json_from_file(path):
-    with open(path) as file:
-        data = json.load(file)
-    return data
-
-if __name__ == "__main__":
+def generate_grid():
     json = read_json_from_file('./data.json')
     H = json["H"]
     L = json["L"]
@@ -15,19 +11,22 @@ if __name__ == "__main__":
     nL = json["nL"]
     K = json["K"]
     t = json["t"]
+    dx = L/nL
+    dy = H/nH
+    nodes = list()
+    for i in range(0, nL):
+        for j in range(0, nH):
+            nodes.append(Node(i * dx, j * dy, t))
 
-    universal = UniversalElement()
+    elements = list()
+    for i in range(0, nL - 1):
+        for j in range(0, nH - 1):
+            tmp = [nodes[i * nH + j], nodes[(i + 1) * nH + j], nodes[(i + 1) * nH + j + 1], nodes[i * nH + j + 1]]
+            elements.append(Element(tmp))
+
+    return Grid(nodes=nodes, elements=elements)
 
 
-    # nodes = list()
-    # for i in range(0, nL):
-    #     for j in range(0, nH):
-    #         nodes.append(Node(i, j, t))
-    #
-    # elements = list()
-    # for i in range(0, nL - 1):
-    #     for j in range(0, nH - 1):
-    #         tmp = [nodes[i * nH + j], nodes[(i + 1) * nH + j], nodes[(i + 1) * nH + j + 1], nodes[i * nH + j + 1]]
-    #         elements.append(Element(tmp))
-    #
-    # grid = Grid(nodes=nodes, elements=elements)
+if __name__ == "__main__":
+    universal_element = UniversalElement()
+    grid = generate_grid()
