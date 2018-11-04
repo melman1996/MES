@@ -2,13 +2,12 @@ from utils import *
 
 
 class Node:
-    def __init__(self, x, y, t):
-        self.x = x
-        self.y = y
+    def __init__(self, coord, t):
+        self.coord = coord
         self.t = t
 
     def show(self):
-        print("{%(x)d, %(y)d}" % {'x': self.x, 'y': self.y})
+        print("x: {}, y: {}".format(self.coord[0], self.coord[1]))
 
 
 class Element:

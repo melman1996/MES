@@ -14,7 +14,7 @@ def dNdKsi():
         lambda ksi, eta: -0.25 * (1 - eta),
         lambda ksi, eta: 0.25 * (1 - eta),
         lambda ksi, eta: 0.25 * (1 + eta),
-        lambda ksi, eta: -0.25 * (1 - eta)
+        lambda ksi, eta: -0.25 * (1 + eta)
     ]
 
 
