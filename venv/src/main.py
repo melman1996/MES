@@ -11,8 +11,8 @@ def generate_grid():
 	nL = json["nL"]
 	K = json["K"]
 	t = json["t"]
-	dx = L/nL
-	dy = H/nH
+	dx = L / nL
+	dy = H / nH
 	nodes = list()
 	for i in range(0, nL):
 		for j in range(0, nH):
@@ -39,12 +39,18 @@ if __name__ == "__main__":
 	print("dN/dEta:")
 	for tab in universal_element.pdNdEta:
 		print(tab)
-	print("Jakobian:")
+	print("Jxx:")
 	universal_element.generate_matrice_J(grid.elements[0])
-	for tab in universal_element.jakobian:
+	for tab in universal_element.jxx:
 		print(tab)
 	print("DetJ:")
 	print(universal_element.detJ)
+	print("Jxxx:")
+	for tab in universal_element.jxxx:
+		print(tab)
 	print("dN/dX:")
 	for tab in universal_element.dNdX:
+		print(tab)
+	print("dN/dY:")
+	for tab in universal_element.dNdY:
 		print(tab)
