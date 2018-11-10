@@ -9,6 +9,14 @@ def read_json_from_file(path):
 
 
 #funkcje ksztaltu
+def N():
+    return [
+        lambda ksi, eta: 0.25 * (1 - ksi) * (1 - eta),
+        lambda ksi, eta: 0.25 * (1 + ksi) * (1 - eta),
+        lambda ksi, eta: 0.25 * (1 + ksi) * (1 + eta),
+        lambda ksi, eta: 0.25 * (1 - ksi) * (1 + eta)
+    ]
+
 def dNdKsi():
     return [
         lambda ksi, eta: -0.25 * (1 - eta),

@@ -11,46 +11,37 @@ def generate_grid():
 	nL = json["nL"]
 	K = json["K"]
 	t = json["t"]
-	dx = L / nL
-	dy = H / nH
+	#generate nodes
 	nodes = list()
 	for i in range(0, nL):
 		for j in range(0, nH):
-			nodes.append(Node((i * dx, j * dy), t))
-
+			node = Node((i * L, j * H), t)
+			if (i == 0 or i == nL - 1) or (j == 0 or j == nL - 1):
+				node.bc = True
+			nodes.append(node)
+	#generate nodes
 	elements = list()
 	for i in range(0, nL - 1):
 		for j in range(0, nH - 1):
 			tmp = [nodes[i * nH + j], nodes[(i + 1) * nH + j], nodes[(i + 1) * nH + j + 1], nodes[i * nH + j + 1]]
-			elements.append(Element(tmp))
+			elements.append(Element(tmp, K))
 
 	return Grid(nodes=nodes, elements=elements)
 
 
 if __name__ == "__main__":
-	universal_element = UniversalElement()
 	grid = generate_grid()
+	element = grid.elements[0]
+	universal_element = UniversalElement(element)
 
-	# check universal element
-	grid.elements[0].show()
-	print("dN/dKsi:")
-	for tab in universal_element.pdNdKsi:
+	#check universal element
+	element.show()
+	print("Matrix H:")
+	for tab in universal_element.matrixH:
 		print(tab)
-	print("dN/dEta:")
-	for tab in universal_element.pdNdEta:
+	print("C:")
+	for tab in universal_element.C:
 		print(tab)
-	print("Jxx:")
-	universal_element.generate_matrice_J(grid.elements[0])
-	for tab in universal_element.jxx:
-		print(tab)
-	print("DetJ:")
-	print(universal_element.detJ)
-	print("Jxxx:")
-	for tab in universal_element.jxxx:
-		print(tab)
-	print("dN/dX:")
-	for tab in universal_element.dNdX:
-		print(tab)
-	print("dN/dY:")
-	for tab in universal_element.dNdY:
+	print("H:")
+	for tab in universal_element.H:
 		print(tab)
