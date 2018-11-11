@@ -1,8 +1,14 @@
 {
-  "H": 1,
-  "L": 1,
-  "nH": 40,
-  "nL": 40,
-  "K": 30,
-  "t": 20
+  "initial_temperature": 100,
+  "time": 500,
+  "step": 50,
+  "ambient_temperature": 1200,
+  "alfa": 300,
+  "H": 0.1,
+  "L": 0.1,
+  "nH": 4,
+  "nL": 4,
+  "specific_heat": 700,
+  "conductivity": 25,
+  "density": 7800
 }

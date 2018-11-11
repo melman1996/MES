@@ -1,5 +1,11 @@
+from tabulate import tabulate
 import json
 
+
+#pretty print matrice
+def pprint(name, matrix):
+	print(name + ":")
+	print(tabulate(matrix))
 
 #czytanie pliku
 def read_json_from_file(path):

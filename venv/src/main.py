@@ -1,3 +1,4 @@
+from structures.element import *
 from structures.grid import *
 from structures.universal_element import *
 from utils import *
@@ -9,16 +10,17 @@ def generate_grid():
 	L = json["L"]
 	nH = json["nH"]
 	nL = json["nL"]
-	K = json["K"]
-	t = json["t"]
+	K = json["conductivity"]
+	t = json["initial_temperature"]
 	#generate nodes
 	nodes = list()
 	for i in range(0, nL):
 		for j in range(0, nH):
-			node = Node((i * L, j * H), t)
+			node = Node(i * nL + j, (i * L, j * H), t)
 			if (i == 0 or i == nL - 1) or (j == 0 or j == nL - 1):
 				node.bc = True
 			nodes.append(node)
+
 	#generate nodes
 	elements = list()
 	for i in range(0, nL - 1):
@@ -26,22 +28,9 @@ def generate_grid():
 			tmp = [nodes[i * nH + j], nodes[(i + 1) * nH + j], nodes[(i + 1) * nH + j + 1], nodes[i * nH + j + 1]]
 			elements.append(Element(tmp, K))
 
-	return Grid(nodes=nodes, elements=elements)
+	return Grid(nodes=nodes, elements=elements, k=K)
 
 
 if __name__ == "__main__":
 	grid = generate_grid()
-	element = grid.elements[0]
-	universal_element = UniversalElement(element)
-
-	#check universal element
-	element.show()
-	print("Matrix H:")
-	for tab in universal_element.matrixH:
-		print(tab)
-	print("C:")
-	for tab in universal_element.C:
-		print(tab)
-	print("H:")
-	for tab in universal_element.H:
-		print(tab)
+	grid.initialize()
