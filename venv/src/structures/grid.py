@@ -1,7 +1,5 @@
 from utils import *
 from structures.universal_element import *
-import matplotlib.pyplot as plt
-import numpy as np
 
 
 class Grid:
@@ -18,29 +16,26 @@ class Grid:
 		self.initialize_universal_elements()
 		self.map_matrices()
 
-		pprint("H", self.H)
-		pprint("C", self.C)
+		#self.show(0)
 
 	def initialize(self):
-		self.CDT = [
-			[c / self.step for c in C] for C in self.C
-		]
-		self.HCT = [
-			[
-				h + c for h, c in zip(H, CDT)
-			] for H, CDT in zip(self.H, self.CDT)
-		]
-		pprint("[H] * ([C] / dt)", self.HCT)
-		self.t0 = [
-			node.t for node in self.nodes
-		]
-		print(multiply_matrix_vector(self.CDT, self.t0))
-		print(self.P)
+		t0 = [node.t for node in self.nodes]
+		for i in range(int(self.time/self.step)):
+			cdtp = [
+				x + p for p, x in zip(self.P, multiply_matrix_vector(self.CDT, t0))
+			]
+			t1 = solve(self.HCT, cdtp)
+			print("----------Iteration {}----------".format(i + 1))
+			#print(t1)
+			print("Min: {}, max: {}".format(min(t1), max(t1)))
+			self.update_temperatures(t1)
+			self.draw_grid(t1)
+			t0 = t1
 
 	def initialize_universal_elements(self):
 		self.universal_elements = list()
 		for element in self.elements:
-			universal_element = UniversalElement(element, self.ro, self.c, self.alfa)
+			universal_element = UniversalElement(element, self.ro, self.c, self.alfa, self.tot)
 			self.universal_elements.append(universal_element)
 
 	def map_matrices(self):
@@ -50,13 +45,21 @@ class Grid:
 				for j in range(4):
 					self.H[element.nodes[i].id][element.nodes[j].id] += universal_element.H[i][j]
 					self.C[element.nodes[i].id][element.nodes[j].id] += universal_element.C[i][j]
-
-	def draw_grid(self):
-		data = np.array([
+		self.CDT = [
+			[c / self.step for c in C] for C in self.C
+		]
+		self.HCT = [
+			[
+				h + c for h, c in zip(H, CDT)
+			] for H, CDT in zip(self.H, self.CDT)
+		]
+		self.t0 = [
 			node.t for node in self.nodes
-		]).reshape((self.nL, self.nH))
-		heatmap = plt.pcolor(data)
-		plt.show()
+		]
+
+	def update_temperatures(self, t1):
+		for node, t in zip(self.nodes, t1):
+			node.t = t
 
 	def read_file(self):
 		json = read_json_from_file('./data.json')
@@ -70,3 +73,11 @@ class Grid:
 		self.ro = json["density"]
 		self.time = json["time"]
 		self.step = json["step"]
+
+	def show(self, iteration):
+		print("----------Iteration {}----------".format(iteration))
+		pprint("H", self.H)
+		pprint("C", self.C)
+
+	def draw_grid(self, array):
+		draw_grid(array, self.nL, self.nH)

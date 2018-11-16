@@ -1,6 +1,8 @@
 from tabulate import tabulate
 import json
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
 
 
 #pretty print matrice
@@ -52,4 +54,20 @@ def multiply_matrices(m1, m2):
 def multiply_matrix_vector(m1, v1):
 	x = np.array(m1)
 	y = np.array(v1)
-	return np.matmul(x, y)
+	return np.matmul(x, y).tolist()
+
+
+def solve(hct, cdtp):
+    A = np.array(hct)
+    B = np.array(cdtp)
+    return (np.linalg.inv(A) @ B).tolist()
+
+
+#draw grid
+def draw_grid(array, x, y):
+	data = np.array(array).reshape(x, y)
+	cmap = LinearSegmentedColormap.from_list('dupa',["b", "y", "r"], N=10000)
+	print(cmap)
+	plt.imshow(data, cmap=cmap, vmin=100, vmax=1200)
+	plt.colorbar()
+	plt.show()

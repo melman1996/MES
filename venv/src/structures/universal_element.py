@@ -5,7 +5,7 @@ from operator import add
 
 
 class UniversalElement:
-	def __init__(self, element, ro, c, alfa):
+	def __init__(self, element, ro, c, alfa, tot):
 		self.element = element
 		self.p = [
 			(-1 / sqrt(3), -1 / sqrt(3)),
@@ -16,6 +16,7 @@ class UniversalElement:
 		self.ro = ro
 		self.c = c
 		self.alfa = alfa
+		self.tot = tot
 		self.length = [0, 0, 0, 0]
 
 		self.generate_matrices()
@@ -190,14 +191,4 @@ class UniversalElement:
 				point = [points[index0 * 2], points[index0 * 2 + 1]]
 				for p in point:
 					for i in range(4):
-						self.P[i] += n[i](*p) * self.alfa * self.element.nodes[i].t * self.length[i] / 2
-		print(self.P)
-
-		# for point in points:
-		# 	for i in range(4):
-		# 		self.P[i] += n[i](*point) * self.alfa * self.element.nodes[i].t * self.length[i] / 2
-		# for i in range(4):
-		# 	if not self.element.nodes[i].bc:
-		# 		self.P[i] = 0
-		# 	else:
-		# 		self.P[i] *= self.alfa * self.element.nodes[i].t * self.length[i] / 2
+						self.P[i] += n[i](*p) * self.alfa * self.tot * self.length[i] / 2
