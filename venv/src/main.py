@@ -13,10 +13,12 @@ def generate_grid():
 	K = json["conductivity"]
 	t = json["initial_temperature"]
 	#generate nodes
+	dx = H / (nH - 1)
+	dy = L / (nL - 1)
 	nodes = list()
 	for i in range(0, nL):
 		for j in range(0, nH):
-			node = Node(i * nL + j, (i * L, j * H), t)
+			node = Node(i * nL + j, (i * dx, j * dy), t)
 			if (i == 0 or i == nL - 1) or (j == 0 or j == nL - 1):
 				node.bc = True
 			nodes.append(node)

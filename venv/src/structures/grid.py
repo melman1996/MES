@@ -20,29 +20,22 @@ class Grid:
 
 		pprint("H", self.H)
 		pprint("C", self.C)
-		CdT = np.array([
-			[
-				x / self.step for x in list
-			]for list in self.C
-		])
-		t = np.array([
-			node.t for node in self.nodes
-		])
-		CdTt = CdT.dot(t)
-		self.P = [
-			p + c for p, c in zip(self.P, CdTt)
-		]
-		print(self.P)
-
-		#self.draw_grid()
-
 
 	def initialize(self):
+		self.CDT = [
+			[c / self.step for c in C] for C in self.C
+		]
 		self.HCT = [
 			[
-				h + (c / self.step) for h, c in zip(H, C)
-			]for H, C in zip(self.H, self.C)
+				h + c for h, c in zip(H, CDT)
+			] for H, CDT in zip(self.H, self.CDT)
 		]
+		pprint("[H] * ([C] / dt)", self.HCT)
+		self.t0 = [
+			node.t for node in self.nodes
+		]
+		print(multiply_matrix_vector(self.CDT, self.t0))
+		print(self.P)
 
 	def initialize_universal_elements(self):
 		self.universal_elements = list()
@@ -55,7 +48,7 @@ class Grid:
 			for i in range(4):
 				self.P[element.nodes[i].id] += universal_element.P[i]
 				for j in range(4):
-					self.H[element.nodes[i].id][element.nodes[j].id] += universal_element.matrixH[i][j]
+					self.H[element.nodes[i].id][element.nodes[j].id] += universal_element.H[i][j]
 					self.C[element.nodes[i].id][element.nodes[j].id] += universal_element.C[i][j]
 
 	def draw_grid(self):

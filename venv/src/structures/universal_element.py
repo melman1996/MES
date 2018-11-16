@@ -131,7 +131,7 @@ class UniversalElement:
 			(-1, -1 / sqrt(3)),
 		]
 		n = N()
-		self.H = [[0] * 4 for i in range(4)]
+		self.bcH = [[0] * 4 for i in range(4)]
 		for z in range(4):
 			index0, index1 = z, z+1
 			if index1 >= len(self.element.nodes):
@@ -157,11 +157,16 @@ class UniversalElement:
 						(x + y) * self.length[z]/2 for x, y in zip(list1, list2)
 					] for list1, list2 in zip(pc0, pc1)
 				]
-				self.H = [
+				self.bcH = [
 					[
 						x + y for x, y in zip(list1, list2)
-					] for list1, list2 in zip(self.H, sum)
+					] for list1, list2 in zip(self.bcH, sum)
 				]
+		self.H = [
+			[
+				a + b for a, b in zip(list1, list2)
+			] for list1, list2 in zip(self.matrixH, self.bcH)
+		]
 
 	def generate_vector_P(self):
 		points = [
@@ -176,11 +181,23 @@ class UniversalElement:
 		]
 		n = N()
 		self.P = [0] * 4
-		for point in points:
-			for i in range(4):
-				self.P[i] += n[i](*point)
-		for i in range(4):
-			if not self.element.nodes[i].bc:
-				self.P[i] = 0
-			else:
-				self.P[i] *= self.alfa * self.element.nodes[i].t * self.length[i] / 2
+
+		for z in range(4):
+			index0, index1 = z, z+1
+			if index1 >= len(self.element.nodes):
+				index1 = 0
+			if self.element.nodes[index0].bc and self.element.nodes[index1].bc:
+				point = [points[index0 * 2], points[index0 * 2 + 1]]
+				for p in point:
+					for i in range(4):
+						self.P[i] += n[i](*p) * self.alfa * self.element.nodes[i].t * self.length[i] / 2
+		print(self.P)
+
+		# for point in points:
+		# 	for i in range(4):
+		# 		self.P[i] += n[i](*point) * self.alfa * self.element.nodes[i].t * self.length[i] / 2
+		# for i in range(4):
+		# 	if not self.element.nodes[i].bc:
+		# 		self.P[i] = 0
+		# 	else:
+		# 		self.P[i] *= self.alfa * self.element.nodes[i].t * self.length[i] / 2
